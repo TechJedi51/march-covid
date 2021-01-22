@@ -1,31 +1,50 @@
-// Edit lines 27 & 28 to adjust placement of widget
-// Edit line 12 to use a different date
+// Edit to use a different start date
+const covidStartDate = new Date("03/01/2020");
+// Edit to adjust placement of widget
+const topOfWidget = "100"
+const leftOfWidget = "1200"
+
 
 import { styled } from "uebersicht";
 import { css } from "uebersicht";
 
-export const refreshFrequency = 28800; //Update every 8 hours
+export const refreshFrequency = 3600000; //Update every hour [3600000]
 
-const Wrapper = styled("div")``;
-
-export const render = ({days}, dispatch) => {
-	var covidStartDate = new Date("03/01/2020"); 
+export function getDays () {
 	let dateNow = new Date();
-	
 	// To calculate the time difference of two dates 
-	var Difference_In_Time = dateNow.getTime() - covidStartDate.getTime(); 
+	var differenceInTime = dateNow.getTime() - covidStartDate.getTime(); 
   
 	// To calculate the no. of days between two dates 
-	var Difference_In_Days = Math.ceil(Difference_In_Time / (1000 * 3600 * 24)); 
-	
+	var differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24)); 
+	return differenceInDays
+}
+
+export const initialState = {differenceInDays: getDays()}
+
+export const command = (dispatch) => {
+  dispatch({differenceInDays: getDays()})
+}
+
+export const updateState = (event, previousState) => {
+  if (event.error) {
+    console.error(event.error)
+    return {...previousState, warning: `We got an error: ${event.error}`}
+  }
+  return {differenceInDays: getDays()}
+}
+
+export const render = ({differenceInDays, error}) => {	
 	return (
-		<TimeWrapper>{Difference_In_Days}</TimeWrapper>
+		<TimeWrapper>{differenceInDays}</TimeWrapper>
 		)
 }
 
+const Wrapper = styled("div")``;
+
 export const className = `
-	top: 100px;
-	left: 1200px;
+	top: ${topOfWidget}px;
+	left: ${leftOfWidget}px;
 	background-image: url(MarchCovid.widget/Mar.png);
 	height: 128px;
 	margin: 0px auto;
@@ -37,9 +56,9 @@ export const className = `
     `
     
 const TimeWrapper = styled("div")`
-	font-size: 28pt;
+	font-size: 31pt;
 	-webkit-transform: rotate(349deg);
-	padding-top: 50px;
+	padding-top: 48px;
 	padding-right: 9px;
 	font-weight: bold;
 	color: black;

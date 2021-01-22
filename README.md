@@ -2,5 +2,5 @@
 ![march-covid](screenshot.png)
 ## Installation
 1. Download [Übersicht](http://tracesof.net/uebersicht/)
-2. Copy `MarchCovid.widget` to your widgets folder.
+2. Copy the `MarchCovid.widget` folder to your widgets folder.
 
